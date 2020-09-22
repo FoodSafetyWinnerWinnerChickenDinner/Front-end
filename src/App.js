@@ -1,28 +1,47 @@
-import React, { useEffect, useRef, useState } from 'react'
-import './App.css'
+import React, { createElement, useEffect, useRef, useState } from 'react'
+import './styles/main.scss'
 import ml5 from 'ml5'
-import GaugeChart from './GaugeChart'
-import useInterval from './useInterval'
 import { isEmpty } from './functions'
+import FoodList from './components/FoodList'
+import { RadialChart } from 'react-vis'
 
 let classifier
-
+const myData = [
+    { angle: 1 },
+    { angle: 5 },
+    { angle: 2 },
+    { angle: 3 },
+    { angle: 4 },
+]
+const myColor = ['#5BB486', '#45936A', '#366A72', '#254F54', '#EAF8F2']
+const chartStyle = {
+    margin: '0 auto',
+}
 function App() {
-    // const videoRef = useRef();
     const imageRef = useRef()
-    // const [gaugeData, setGaugeData] = useState([0.5, 0.5]);
     // const [shouldClassify, setShouldClassify] = useState(false);
     const [imageFile, setImageFile] = useState()
     const [backgroundImage, setBackgroundImage] = useState()
     const [category, setCatetory] = useState()
     const [menu, setMenu] = useState([])
+    const [foodTime, setFoodTime] = useState('전체')
+    const [isLoading, setIsLoading] = useState(false)
     useEffect(() => {
+        if (!isLoading) {
+            setTimeout(() => {
+                setIsLoading(true)
+            }, 1000)
+        }
         classifier = ml5.imageClassifier('./my-model/model.json', () => {
             console.log('model loaded!')
         })
         if (backgroundImage && classifier) {
             console.log(imageRef.current)
-            classifier.classify(imageRef.current, (error, results) => {
+            console.log(backgroundImage)
+            let imageElement = document.createElement('img')
+            imageElement.src = backgroundImage
+            console.log(imageElement)
+            classifier.classify(imageElement, (error, results) => {
                 if (error) {
                     console.error(error)
                     return
@@ -40,113 +59,151 @@ function App() {
         console.log(menu)
     }, [backgroundImage])
 
-    // useInterval(() => {
-    //   if (classifier && shouldClassify) {
-    //     classifier.classify(imageRef.current, (error, results) => {
-    //       if (error) {
-    //         console.error(error);
-    //         return;
-    //       }
-    //       console.log("test start!");
-    //       console.log(results);
-    //       results.sort((a, b) => (a.confidence < b.confidence) ? 1 : -1);
-    //       // results.sort((a, b) => b.label.localeCompare(a.label));
-    //       console.log(results);
-    //       // setGaugeData(results.map(entry => entry.confidence));
-    //     });
-    //   }
-    // }, 500);
-
     return (
         <React.Fragment>
-            <h1
-                style={{
-                    fontSize: '50px',
-                    fontWeight: 'lighter',
-                    marginBottom: '100px',
-                }}
-            >
-                식단 조절기
-            </h1>
-            <div style={{ marginBottom: '50px' }}>
-                <button>아침</button>
-                <button>점심</button>
-                <button>저녁</button>
-            </div>
-            {/* {isEmpty(category) ? (
-                <h2>무엇을 드셨나요?</h2>
-            ) : (
-                <h2>{category}</h2>
-            )} */}
-            {/* <button onClick={() => setShouldClassify(!shouldClassify)}>
-        {shouldClassify ? "Stop classifying" : "Start classifying"}
-      </button> */}
-            {/* <img src="/kimchi.jpeg" alt="빵" ref={imageRef} /> */}
-            <input
-                accept="image/*"
-                // className={classes.input}
-                style={{
-                    display: 'none',
-                }}
-                id="contained-button-file"
-                type="file"
-                onChange={(e) => {
-                    var file = e.target.files[0]
-                    setImageFile(file)
-                    const reader = new FileReader()
-                    reader.readAsDataURL(file)
-                    reader.onloadend = () => {
-                        setBackgroundImage([reader.result])
-                        console.log(reader.result)
-                    }
-                }}
-            />
-            {isEmpty(backgroundImage) && (
-                <label
-                    // className={classes.photoArea}
-                    htmlFor="contained-button-file"
+            {!isLoading ? (
+                <div
                     style={{
+                        width: '100%',
+                        height: '100vh',
+                        backgroundColor: '#5BB486',
                         display: 'flex',
-                        backgroundColor: 'grey',
-                        backgroundPosition: 'center center',
-                        border: 'none',
-                        color: 'white',
-                        textAlign: 'center',
-                        cursor: 'pointer',
-                        backgroundSize: 'cover',
-                        backgroundRepeat: 'no-repeat',
-                        width: '300px',
-                        height: '300px',
-                        margin: '0 auto',
-                        textAlign: 'center',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        textAlign: 'center',
                     }}
                 >
-                    <p
+                    <img
+                        src="/splash.png"
                         style={{
-                            fontSize: '50px',
+                            width: '30%',
+                            maxWidth: '200px',
+                        }}
+                    />
+                </div>
+            ) : (
+                <>
+                    {/* <div
+                        style={{
+                            height: '20px',
+                            textAlign: 'center',
+                            backgroundColor: '#5BB486',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    ></div> */}
+                    <div className="food-time-wrap">
+                        <div
+                            className={`food-time-btn${
+                                foodTime === '전체' ? '-clicked' : ''
+                            }`}
+                            onClick={() => {
+                                if (foodTime === '전체') setFoodTime('전체')
+                                else setFoodTime('전체')
+                            }}
+                        >
+                            <span>전체</span>
+                        </div>
+                        <div
+                            className={`food-time-btn${
+                                foodTime === '아침' ? '-clicked' : ''
+                            }`}
+                            onClick={() => {
+                                if (foodTime === '아침') setFoodTime('전체')
+                                else setFoodTime('아침')
+                            }}
+                        >
+                            <span>아침</span>
+                        </div>
+                        <div
+                            className={`food-time-btn${
+                                foodTime === '점심' ? '-clicked' : ''
+                            }`}
+                            onClick={() => {
+                                if (foodTime === '점심') setFoodTime('전체')
+                                else setFoodTime('점심')
+                            }}
+                        >
+                            <span>점심</span>
+                        </div>
+                        <div
+                            className={`food-time-btn${
+                                foodTime === '저녁' ? '-clicked' : ''
+                            }`}
+                            onClick={() => {
+                                if (foodTime === '저녁') setFoodTime('전체')
+                                else setFoodTime('저녁')
+                            }}
+                        >
+                            <span>저녁</span>
+                        </div>
+                    </div>
+                    <div
+                        style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            fontSize: '20px',
+                            marginTop: '40px',
                             fontWeight: 'bold',
                         }}
                     >
-                        +
-                    </p>
-                </label>
-            )}
-            {!isEmpty(backgroundImage) && (
-                <>
-                    <img
-                        src={backgroundImage}
-                        style={{
-                            width: '300px',
-                            margin: '0 auto',
-                        }}
-                        alt="이미지"
-                        ref={imageRef}
+                        <span>9월 27일 (수)</span>
+                    </div>
+                    {/* <div style={{ width: '100%', padding: '0 10px 0 10px' }}> */}
+                    <RadialChart
+                        // style={{ margin: '0 auto', width: '300px', height: '300px' }}
+                        data={myData}
+                        className="food-chart"
+                        width={230}
+                        height={230}
+                        colorRange={myColor}
                     />
-                </>
-            )}
-            {/* {!isEmpty(menu) && (
+
+                    <FoodList />
+                    <input
+                        accept="image/*"
+                        // className={classes.input}
+                        style={{
+                            display: 'none',
+                        }}
+                        id="contained-button-file"
+                        type="file"
+                        onChange={(e) => {
+                            var file = e.target.files[0]
+                            setImageFile(file)
+                            const reader = new FileReader()
+                            reader.readAsDataURL(file)
+                            reader.onloadend = () => {
+                                setBackgroundImage([reader.result])
+                                console.log(reader.result)
+                            }
+                        }}
+                    />
+                    {isEmpty(backgroundImage) && (
+                        <label
+                            // className={classes.photoArea}
+                            htmlFor="contained-button-file"
+                            className="plus-wrap"
+                        >
+                            <img className="plus" src="/plus.png" />
+                        </label>
+                    )}
+                    {!isEmpty(backgroundImage) && (
+                        <>
+                            <img
+                                src={backgroundImage}
+                                style={{
+                                    width: '300px',
+                                    margin: '0 auto',
+                                }}
+                                alt="이미지"
+                                ref={imageRef}
+                            />
+                        </>
+                    )}
+
+                    {/* {!isEmpty(menu) && (
                 <div>
                     {menu.map((data, i) => {
                         return (
@@ -157,15 +214,17 @@ function App() {
                     })}
                 </div>
             )} */}
-            {!isEmpty(category) && (
-                <div
-                    style={{
-                        fontSize: '40px',
-                    }}
-                >
-                    <div>{category}</div>
-                    <>500kcal</>
-                </div>
+                    {!isEmpty(category) && (
+                        <div
+                            style={{
+                                fontSize: '40px',
+                            }}
+                        >
+                            <div>{category}</div>
+                            <>500kcal</>
+                        </div>
+                    )}
+                </>
             )}
         </React.Fragment>
     )

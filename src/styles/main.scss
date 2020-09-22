@@ -1,0 +1,63 @@
+@import './foodlist.scss';
+
+body {
+    margin: 0;
+    padding: 0;
+}
+.food-time-wrap {
+    width: 100%;
+    max-width: 375px;
+    // height: 70px;
+    margin: 0 auto;
+    text-align: center;
+    // padding-top: 20px;
+    // padding-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.food-time-btn {
+    width: 100%;
+    height: 50px;
+    font-size: 20px;
+    font-weight: lighter;
+    // margin-left: 20px;
+    // margin-right: 20px;
+    cursor: pointer;
+    transition: '.5s';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #828283;
+    // border-bottom: 3px solid #5b7f86;
+}
+
+.food-time-btn-clicked {
+    width: 100%;
+    height: 50px;
+    font-size: 20px;
+    font-weight: regular;
+    background-color: #5b7f86;
+    // margin-left: 20px;
+    // margin-right: 20px;
+    color: white;
+    transition: '.5s';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.food-add-btn {
+}
+
+.plus-wrap {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 60px;
+    cursor: pointer;
+    filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.2));
+    .plus {
+        width: 100%;
+    }
+}
