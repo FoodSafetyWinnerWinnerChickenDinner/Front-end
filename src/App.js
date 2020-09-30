@@ -4,6 +4,7 @@ import ml5 from 'ml5'
 import { isEmpty } from './functions'
 import FoodList from './components/FoodList'
 import { RadialChart } from 'react-vis'
+import Header from './components/Header'
 
 let classifier
 const myData = [
@@ -106,63 +107,8 @@ function App() {
                 </div>
             ) : (
                 <>
+                    <Header />
                     {/* <div
-                        style={{
-                            height: '20px',
-                            textAlign: 'center',
-                            backgroundColor: '#5BB486',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    ></div> */}
-                    {/* <div className="food-time-wrap">
-                        <div
-                            className={`food-time-btn${
-                                foodTime === '전체' ? '-clicked' : ''
-                            }`}
-                            onClick={() => {
-                                if (foodTime === '전체') setFoodTime('전체')
-                                else setFoodTime('전체')
-                            }}
-                        >
-                            <span>전체</span>
-                        </div>
-                        <div
-                            className={`food-time-btn${
-                                foodTime === '아침' ? '-clicked' : ''
-                            }`}
-                            onClick={() => {
-                                if (foodTime === '아침') setFoodTime('전체')
-                                else setFoodTime('아침')
-                            }}
-                        >
-                            <span>아침</span>
-                        </div>
-                        <div
-                            className={`food-time-btn${
-                                foodTime === '점심' ? '-clicked' : ''
-                            }`}
-                            onClick={() => {
-                                if (foodTime === '점심') setFoodTime('전체')
-                                else setFoodTime('점심')
-                            }}
-                        >
-                            <span>점심</span>
-                        </div>
-                        <div
-                            className={`food-time-btn${
-                                foodTime === '저녁' ? '-clicked' : ''
-                            }`}
-                            onClick={() => {
-                                if (foodTime === '저녁') setFoodTime('전체')
-                                else setFoodTime('저녁')
-                            }}
-                        >
-                            <span>저녁</span>
-                        </div>
-                    </div> */}
-                    <div
                         style={{
                             width: '100%',
                             textAlign: 'center',
@@ -173,15 +119,14 @@ function App() {
                     >
                         <span>9월 27일 (수)</span>
                     </div>
-                    {/* <div style={{ width: '100%', padding: '0 10px 0 10px' }}> */}
+                    
                     <RadialChart
-                        // style={{ margin: '0 auto', width: '300px', height: '300px' }}
                         data={myData}
                         className="food-chart"
                         width={230}
                         height={230}
                         colorRange={myColor}
-                    />
+                    /> */}
                     <FoodList />
                     <input
                         accept="image/*"
@@ -246,7 +191,7 @@ function App() {
                     </label>
                     <div
                         style={{
-                            padding: '20px',
+                            padding: '0 20px 0 20px',
                             display: 'flex',
                             margin: '0 auto',
                             justifyContent: 'center',
