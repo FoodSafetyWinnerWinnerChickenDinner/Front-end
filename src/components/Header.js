@@ -5,10 +5,10 @@ const Header = () => {
     return (
         <div className="header">
             <span className="header-date" s>
-                9월 30일(수)
+                섭취량
             </span>
             <div>
-                <span className="header-kcal">1,540</span>
+                <span className="header-kcal">1,540 </span>
                 <span className="header-kcal-sub">kcal</span>
             </div>
         </div>

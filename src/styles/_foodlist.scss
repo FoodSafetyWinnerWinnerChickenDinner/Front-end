@@ -1,11 +1,20 @@
 .foodlist {
     // width: 100%;
     margin: 0 auto;
+    display: flex;
     max-width: 375px;
     padding: 20px 20px;
     font-size: 20px;
     font-weight: bold;
     border-top: 10px solid #f5f5f5;
+    justify-content: space-between;
+    .plus-wrap {
+        width: 17px;
+        cursor: pointer;
+        .plus {
+            width: 100%;
+        }
+    }
 }
 
 .food-chart {

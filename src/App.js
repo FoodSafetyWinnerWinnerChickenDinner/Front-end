@@ -5,7 +5,7 @@ import { isEmpty } from './functions'
 import FoodList from './components/FoodList'
 import { RadialChart } from 'react-vis'
 import Header from './components/Header'
-
+import Modal from 'react-modal'
 let classifier
 const myData = [
     { angle: 1 },
@@ -22,6 +22,7 @@ function App() {
     // const imageRef = useRef()
     // const [shouldClassify, setShouldClassify] = useState(false);
     const foodList = JSON.parse(localStorage.getItem('foodList')) || []
+    const [modalIsOpen, setModalIsOpen] = useState(false)
     const [imageFile, setImageFile] = useState()
     const [backgroundImage, setBackgroundImage] = useState([])
     const [category, setCategory] = useState(foodList)
@@ -83,14 +84,77 @@ function App() {
 
         console.log(category)
     }, [category])
+
+    const onAnalyze = (data) => {
+        // 분석을 위한 메뉴들을 정리해서 담을 MAP 변수
+        let menu = new Map()
+
+        // 받은 데이터를 바탕으로 for문을 통해, API에 넘겨줄 데이터를 정리한다.
+        for (let i = 0; i < data.length; i++) {
+            let isInMenu = false
+            for (let [key, value] of menu) {
+                if (data[i] === key) {
+                    value++
+                    menu.set(key, value)
+                    isInMenu = true
+                    break
+                }
+            }
+            if (!isInMenu) {
+                menu.set(data[i], 1)
+            }
+        }
+        console.log(menu)
+    }
     return (
         <React.Fragment>
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={() => setModalIsOpen(false)}
+                style={customStyles}
+            >
+                <div
+                    style={{
+                        padding: '0 20px 0 20px',
+                        display: 'flex',
+                        margin: '0 auto',
+                        justifyContent: 'center',
+                    }}
+                >
+                    {!isEmpty(backgroundImage) &&
+                        backgroundImage.map((data, i) => {
+                            return (
+                                <>
+                                    <img
+                                        src={data}
+                                        style={{
+                                            width: '100px',
+                                        }}
+                                        alt="이미지"
+                                        key={i}
+                                    />
+                                </>
+                            )
+                        })}
+                </div>
+                {!isEmpty(backgroundImage) && (
+                    <div
+                        onClick={() => {
+                            setIsReady(true)
+                            setModalIsOpen(false)
+                        }}
+                        className="food-analyze-btn"
+                    >
+                        추가하기
+                    </div>
+                )}
+            </Modal>
             {!isLoading ? (
                 <div
                     style={{
                         width: '100%',
                         height: '100vh',
-                        backgroundColor: '#5BB486',
+                        backgroundColor: '#07c484',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -100,7 +164,7 @@ function App() {
                     <img
                         src="/splash.png"
                         style={{
-                            width: '30%',
+                            width: '100px',
                             maxWidth: '200px',
                         }}
                     />
@@ -108,147 +172,64 @@ function App() {
             ) : (
                 <>
                     <Header />
-                    {/* <div
-                        style={{
-                            width: '100%',
-                            textAlign: 'center',
-                            fontSize: '20px',
-                            marginTop: '40px',
-                            fontWeight: 'bold',
-                        }}
-                    >
-                        <span>9월 27일 (수)</span>
-                    </div>
-                    
-                    <RadialChart
-                        data={myData}
-                        className="food-chart"
-                        width={230}
-                        height={230}
-                        colorRange={myColor}
-                    /> */}
-                    <FoodList />
-                    <input
-                        accept="image/*"
-                        // className={classes.input}
-                        style={{
-                            display: 'none',
-                        }}
-                        id="contained-button-file"
-                        type="file"
-                        multiple
-                        onChange={(e) => {
-                            const imageList = []
-                            const promises = []
-                            const solve = async () => {
-                                for (
-                                    let i = 0;
-                                    i < e.target.files.length;
-                                    i++
-                                ) {
-                                    promises.push(
-                                        new Promise(() => {
-                                            var reader = new FileReader()
-                                            reader.readAsDataURL(
-                                                e.target.files[i]
-                                            )
-
-                                            reader.onloadend = () => {
-                                                setBackgroundImage((prev) => [
-                                                    ...prev,
-                                                    reader.result,
-                                                ])
-                                                // imageList.push(reader.result)
-                                            }
-                                        })
-                                    )
-                                }
-                                await Promise.all(promises).then(() => {})
-                            }
-                            solve()
-
-                            // for (let i = 0; i < e.target.files.length; i++) {
-                            //     var reader = new FileReader()
-                            //     testList.push('t')
-                            //     reader.readAsDataURL(e.target.files[i])
-                            //     console.log(e.target.files[i])
-                            //     reader.onloadend = () => {
-                            //         imageList.push(reader.result)
-                            //         setBackgroundImage(imageList)
-                            //         console.log(reader.result)
-                            //     }
-                            //     console.log(imageList)
-                            //     console.log(testList)
-                            // }
-                        }}
-                    />
-                    <label
-                        // className={classes.photoArea}
-                        htmlFor="contained-button-file"
-                        className="plus-wrap"
-                    >
-                        <img className="plus" src="/plus.png" />
-                    </label>
-                    <div
-                        style={{
-                            padding: '0 20px 0 20px',
-                            display: 'flex',
-                            margin: '0 auto',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        {!isEmpty(backgroundImage) &&
-                            backgroundImage.map((data, i) => {
-                                return (
-                                    <>
-                                        <img
-                                            src={data}
-                                            style={{
-                                                width: '100px',
-                                            }}
-                                            alt="이미지"
-                                            key={i}
-                                        />
-                                    </>
-                                )
-                            })}
-                    </div>{' '}
-                    {!isEmpty(backgroundImage) && (
-                        <div
-                            onClick={() => {
-                                setIsReady(true)
-                            }}
-                            style={{
-                                margin: '0 auto',
-                                display: 'flex',
-                                width: '280px',
-                                height: '58px',
-                                textAlign: 'center',
-                                fontSize: '18px',
-                                backgroundColor: '#254F54',
-                                borderRadius: '20px',
-                                color: 'white',
-                                fontWeight: ' bold',
-                                boxShadow: '0 4px 14px 0 rgba(0,0,0,0.3)',
-                                cursor: 'pointer',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            추가하기
+                    <div className="foodlist">
+                        <div>
+                            <span>식단</span>
                         </div>
-                    )}
-                    {/* {!isEmpty(menu) && (
-                <div>
-                    {menu.map((data, i) => {
-                        return (
-                            <div key={i}>
-                                <span>data.label</span>
-                            </div>
-                        )
-                    })}
-                </div>
-            )} */}
+                        <input
+                            accept="image/*"
+                            // className={classes.input}
+                            style={{
+                                display: 'none',
+                            }}
+                            id="contained-button-file"
+                            type="file"
+                            multiple
+                            onChange={(e) => {
+                                const imageList = []
+                                const promises = []
+
+                                const solve = async () => {
+                                    if (e.target.files.length === 0)
+                                        setModalIsOpen(false)
+                                    for (
+                                        let i = 0;
+                                        i < e.target.files.length;
+                                        i++
+                                    ) {
+                                        promises.push(
+                                            new Promise(() => {
+                                                var reader = new FileReader()
+                                                reader.readAsDataURL(
+                                                    e.target.files[i]
+                                                )
+
+                                                reader.onloadend = () => {
+                                                    setBackgroundImage(
+                                                        (prev) => [
+                                                            ...prev,
+                                                            reader.result,
+                                                        ]
+                                                    )
+                                                    // imageList.push(reader.result)
+                                                }
+                                            })
+                                        )
+                                    }
+                                    await Promise.all(promises).then(() => {})
+                                }
+                                solve()
+                            }}
+                        />
+                        <label
+                            htmlFor="contained-button-file"
+                            className="plus-wrap"
+                            onClick={() => setModalIsOpen(true)}
+                        >
+                            <img className="plus" src="/plus.png" />
+                        </label>
+                    </div>
+
                     <div
                         style={{
                             margin: '0 auto',
@@ -274,7 +255,7 @@ function App() {
                                     >
                                         <span>{data}</span>
                                         <div>
-                                            <span>2인분</span>
+                                            {/* <span>2인분</span> */}
                                             <span
                                                 style={{
                                                     paddingLeft: '10px',
@@ -302,34 +283,53 @@ function App() {
                                 )
                             })}
                     </div>
-                    {!isEmpty(category) && (
+                    {!isEmpty(category) ? (
                         <div
-                            onClick={() => {}}
-                            style={{
-                                margin: '0 auto',
-                                display: 'flex',
-                                width: '280px',
-                                height: '58px',
-                                textAlign: 'center',
-                                fontSize: '18px',
-                                backgroundColor: '#254F54',
-                                borderRadius: '20px',
-                                color: 'white',
-                                fontWeight: ' bold',
-                                boxShadow: '0 4px 14px 0 rgba(0,0,0,0.3)',
-                                marginTop: '20px',
-                                cursor: 'pointer',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
+                            className="food-analyze-btn"
+                            onClick={() => onAnalyze(category)}
                         >
                             분석하기
                         </div>
+                    ) : (
+                        <label
+                            htmlFor="contained-button-file"
+                            className="food-analyze-btn"
+                            onClick={() => setModalIsOpen(true)}
+                        >
+                            추가하기
+                        </label>
                     )}
                 </>
             )}
         </React.Fragment>
     )
+}
+const customStyles = {
+    overlay: {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgb(0,0,0,0.6)',
+        padding: 0,
+    },
+    content: {
+        top: '0',
+        left: '0',
+        right: '0',
+        bottom: '0',
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgb(0,0,0,0.5)',
+        borderRadius: '0px',
+        padding: 0,
+        display: 'flex',
+        justifyContent: 'center',
+        textAlign: 'center',
+        alignItems: 'center',
+        // transform: 'translate(-50%, -50%)',
+    },
 }
 
 export default App
