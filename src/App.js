@@ -6,6 +6,7 @@ import FoodList from './components/FoodList'
 import { RadialChart } from 'react-vis'
 import Header from './components/Header'
 import Modal from 'react-modal'
+import foodService from './services/foodService'
 let classifier
 const myData = [
     { angle: 1 },
@@ -30,7 +31,7 @@ function App() {
     const [foodTime, setFoodTime] = useState('전체')
     const [isLoading, setIsLoading] = useState(false)
     const [isReady, setIsReady] = useState(false)
-
+    const [data, setData] = useState([])
     useEffect(() => {
         if (!isLoading) {
             setTimeout(() => {
@@ -84,6 +85,15 @@ function App() {
 
         console.log(category)
     }, [category])
+
+    useEffect(() => {
+        const data = ['밥 1', '생선구이 1', '돼지구이 1', '김치 1']
+        const postData = async (data) => {
+            const res = await foodService.postFood(data)
+            return res
+        }
+        postData(data)
+    }, [])
 
     const onAnalyze = (data) => {
         // 분석을 위한 메뉴들을 정리해서 담을 MAP 변수
