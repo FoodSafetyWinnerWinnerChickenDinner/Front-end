@@ -1,5 +1,7 @@
-@import './foodlist.scss';
-@import './header.scss';
+@import "./foodlist.scss";
+@import "./header.scss";
+@import "./landing.scss";
+@import "./anaylize.scss";
 
 * {
     margin: 0;
@@ -25,7 +27,7 @@
     // margin-left: 20px;
     // margin-right: 20px;
     cursor: pointer;
-    transition: '.5s';
+    transition: ".5s";
     display: flex;
     justify-content: center;
     align-items: center;
@@ -42,7 +44,7 @@
     // margin-left: 20px;
     // margin-right: 20px;
     color: white;
-    transition: '.5s';
+    transition: ".5s";
     display: flex;
     justify-content: center;
     align-items: center;
@@ -66,7 +68,7 @@
     border-radius: 20px;
     color: white;
     font-weight: bold;
-    box-shadow: '0 4px 14px 0 rgb(0, 0, 0, 0.3)';
+    box-shadow: "0 4px 14px 0 rgb(0, 0, 0, 0.3)";
     margin-top: 20px;
     cursor: pointer;
     align-items: center;

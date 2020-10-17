@@ -1,0 +1,39 @@
+.anaylize {
+    padding-top: 60px;
+    width: 100%;
+    min-height: 100vh;
+    &-back-btn {
+        padding-left: 26px;
+        padding-right: 26px;
+        width: 14px;
+        &-img {
+            width: 100%;
+        }
+    }
+    &-title {
+        padding-left: 26px;
+        padding-right: 26px;
+        margin-top: 30px;
+        font-size: 24px;
+    }
+    &-nut {
+        margin-top: 30px;
+        border-bottom: 7px solid #f5f5f6;
+        height: 150px;
+        &-title {
+            font-size: 21px;
+            font-weight: bold;
+            padding-left: 26px;
+            padding-right: 26px;
+        }
+    }
+    &-recommend {
+        margin-top: 30px;
+        &-title {
+            font-size: 21px;
+            font-weight: bold;
+            padding-left: 26px;
+            padding-right: 26px;
+        }
+    }
+}

@@ -33,6 +33,7 @@ const foodService = {
             data: data,
         })
             .then(function (res) {
+                console.log('dd')
                 console.log(res)
                 return res
             })
